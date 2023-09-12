@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Ground
+  - BringerOfDeath
+  - hook
+  - Enemy
+  - Dangerous
+  - Monster
+  - CheckPoint
+  - LevelManager
+  - DeadZone
+  - MovingPlatform
+  - Gem
+  - Heart
+  - Life
+  - Transport
+  - Sword
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - Monster Bullet
+  - Monster
+  - Ground
+  - Wall
+  - Player
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 1241935253
+    locked: 0
+  - name: Background
+    uniqueID: 2784617893
+    locked: 0
+  - name: Enermy
+    uniqueID: 3263434743
+    locked: 0
+  - name: New Layer
+    uniqueID: 2981705871
+    locked: 0
