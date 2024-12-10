@@ -145,7 +145,7 @@ public class SkeletonLighterControl : Monster
                     isAllowToMove = false;
                     isAllowToUpdate = false;
 
-                    rb.velocity = Vector2.zero;
+                    rb.linearVelocity = Vector2.zero;
                     //rb.isKinematic = true;
 
                     body.SetActive(false);

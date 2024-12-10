@@ -212,8 +212,8 @@ public class ShieldDroidControl : Monster
     {
         if (canClimb)
         {
-            _positionMovingTo = new Vector2(rb.velocity.x , speed * Time.fixedDeltaTime * 10f * _moveDirection);
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, _positionMovingTo, ref _currentVelocity, _smoothSpeedTime);
+            _positionMovingTo = new Vector2(rb.linearVelocity.x , speed * Time.fixedDeltaTime * 10f * _moveDirection);
+            rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, _positionMovingTo, ref _currentVelocity, _smoothSpeedTime);
         }
         else
         {

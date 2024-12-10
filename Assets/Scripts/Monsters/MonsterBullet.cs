@@ -22,7 +22,7 @@ public class MonsterBullet : MonoBehaviour
         {
             if (!animator.GetBool("isHitted"))
             {
-                transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, rb.velocity));
+                transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.right, rb.linearVelocity));
             }
             else
             {
@@ -39,14 +39,14 @@ public class MonsterBullet : MonoBehaviour
             {
                 collider2D.GetComponent<Health>().TakeDamage(damage, transform.position);
                 animator.SetBool("isHitted", true);
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.isKinematic = true;
             }
         }
         else if (collider2D.CompareTag("Ground"))
         {
             animator.SetBool("isHitted", true);
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.isKinematic = true;
         }
     }

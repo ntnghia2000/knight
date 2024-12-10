@@ -72,7 +72,7 @@ public class Knight : MonoBehaviour
     private LevelManager levelManager;
 
     private void Awake() {
-        knight_rb = transform.GetComponent<Rigidbody2D>();
+        knight_rb = GetComponent<Rigidbody2D>();
         knight_ani = GetComponent<Animator>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         respawnPoint = transform.position;
@@ -90,9 +90,9 @@ public class Knight : MonoBehaviour
         isWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, whatIsGround);
         backTouching = Physics2D.OverlapCircle(backCheck.position, checkRadius, whatIsGround);
 
-        if(knight_ani){
+        if (knight_ani) {
             knight_ani.SetBool("isGround", isGround);
-            knight_ani.SetFloat("yVelocity", knight_rb.velocity.y);
+            knight_ani.SetFloat("yVelocity", knight_rb.linearVelocity.y);
             knight_ani.SetBool("walk", canMove);
             knight_ani.SetBool("attack", isAttack);
             knight_ani.SetBool("dash", isDashing);
@@ -101,7 +101,7 @@ public class Knight : MonoBehaviour
             knight_ani.SetBool("fall", falling);
         }
 
-        if(isWall == true && isGround == false && (horizontalInput <= -1 || horizontalInput >= 1)) {
+        if (isWall == true && isGround == false && (horizontalInput <= -1 || horizontalInput >= 1)) {
             wallSliding = true;
             isWallJumpOver = false;
         } else {
@@ -109,7 +109,7 @@ public class Knight : MonoBehaviour
             isWallJumpOver = true;
         }
 
-        if(isWallJumpOver == true && isDashing == false && isDead == false && isHurting == false && horizontalInput != 0) {
+        if (isWallJumpOver == true && isDashing == false && isDead == false && isHurting == false && horizontalInput != 0) {
             MoveHandle();
         }
     }
@@ -125,62 +125,60 @@ public class Knight : MonoBehaviour
             jumpAttack = false;
         }
 
-        if(isGround == true) {
+        if (isGround == true) {
             dashCheck = true;
-            if(spamDusk == true) {
+            if (spamDusk == true) {
                 CreateDust();
                 spamDusk = false;
             }
-        } else {spamDusk = true;}
+        } else {
+            spamDusk = true;
+        }
 
-        if(horizontalInput != 0) {
+        if (horizontalInput != 0) {
             canMove = true;
         } else {
             canMove = false;
         }
 
-        if(wallSliding == true) {
-            knight_rb.velocity = new Vector2(knight_rb.velocity.x, Mathf.Clamp(knight_rb.velocity.y, -wallSlidingSpeed, float.MaxValue));
+        if (wallSliding == true) {
+            knight_rb.linearVelocity = new Vector2(knight_rb.linearVelocity.x, Mathf.Clamp(knight_rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
         }
 
-        if(wallJumping) {
-            if(stopHorizontal == false) {
-                knight_rb.velocity = new Vector2(xWallJumpForce * -horizontalInput, jumpForce);
+        if (wallJumping) {
+            if (stopHorizontal == false) {
+                knight_rb.linearVelocity = new Vector2(xWallJumpForce * -horizontalInput, jumpForce);
                 StartCoroutine(StopHorizontal());
             }
         }
 
-        if(isDashing == true && isWall == true) {
+        if (isDashing == true && isWall == true) {
             isDashing = false;
         }
 
-        if(isDashing == false) {
+        if (isDashing == false) {
             knight_rb.gravityScale = gravity;
         }
     }
 
     private void KeyHandle() {
-        if(isDead == false) {
-            if(Input.GetKeyDown(KeyCode.Space) && backTouching == false) {
+        if (isDead == false) {
+            if (Input.GetKeyDown(KeyCode.Space) && backTouching == false) {
                 Jump();
             }
-            if(Input.GetKeyDown(KeyCode.X)) {
-                if(stopAttack == false) {
+            if (Input.GetKeyDown(KeyCode.X)) {
+                if (stopAttack == false) {
                     Attack();
                     StartCoroutine(StopAttack());
                 }
             }
-            if(Input.GetKeyDown(KeyCode.Z) && SceneManager.GetActiveScene().buildIndex > 1) 
-            {
-                if((isGround == false && dashCheck == true) || isGround == true) 
+            if (Input.GetKeyDown(KeyCode.Z) && SceneManager.GetActiveScene().buildIndex > 1) {
+                if ((isGround == false && dashCheck == true) || isGround == true) 
                 {
-                    if(facingRight == true) 
-                    {
+                    if (facingRight == true) {
                         isDashing = true;
                         StartCoroutine(Dash(1));
-                    } 
-                    else 
-                    {
+                    } else {
                         isDashing = true;
                         StartCoroutine(Dash(-1));
                     }
@@ -188,13 +186,11 @@ public class Knight : MonoBehaviour
                 }
             }
 
-            if(Input.GetKeyUp(KeyCode.LeftArrow))
-            {
+            if (Input.GetKeyUp(KeyCode.LeftArrow)) {
                 isDecelerate = true;
                 StartCoroutine(Deceleration(-1f));
             }
-            if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
+            if (Input.GetKeyUp(KeyCode.RightArrow)) {
                 isDecelerate = true;
                 StartCoroutine(Deceleration(1f));
             }
@@ -203,24 +199,24 @@ public class Knight : MonoBehaviour
 
     void MoveHandle() {
         
-        if(Input.GetKey(KeyCode.LeftArrow)) {
-            if(!knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-                knight_rb.velocity = new Vector2(moveSpeed * horizontalInput, knight_rb.velocity.y);
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            if (!knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+                knight_rb.linearVelocity = new Vector2(moveSpeed * horizontalInput, knight_rb.linearVelocity.y);
             }
-            if(facingRight) {
+            if (facingRight) {
                 Flip();
             }
             
-        } else if(Input.GetKey(KeyCode.RightArrow)) {
-            if(!knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-                knight_rb.velocity = new Vector2(moveSpeed * horizontalInput, knight_rb.velocity.y);
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
+            if (!knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+                knight_rb.linearVelocity = new Vector2(moveSpeed * horizontalInput, knight_rb.linearVelocity.y);
             }
-            if(!facingRight) {
+            if (!facingRight) {
                 Flip();
             }
         } else {
-            if(knight_rb) {
-                knight_rb.velocity = new Vector2(0f, knight_rb.velocity.y);
+            if (knight_rb) {
+                knight_rb.linearVelocity = new Vector2(0f, knight_rb.linearVelocity.y);
             }
         }
     }
@@ -238,7 +234,7 @@ public class Knight : MonoBehaviour
     }
 
     private void Flip() {
-        if(backTouching == false) {
+        if (backTouching == false) {
             CreateDust();
             facingRight = !facingRight;
             Vector3 scaler = transform.localScale;
@@ -250,9 +246,9 @@ public class Knight : MonoBehaviour
     private void Jump() {
         if (isGround == true && isDashing == false) {
             jumpSound.Play();
-            knight_rb.velocity = Vector2.up * jumpForce;
+            knight_rb.linearVelocity = Vector2.up * jumpForce;
             canJump = true;
-        } else if(wallSliding == true && isDashing == false) {
+        } else if (wallSliding == true && isDashing == false) {
             wallJumping = true;
             jumpSound.Play();
             Invoke("setWallJumpToFalse", wallJumpCoolDown);
@@ -260,27 +256,26 @@ public class Knight : MonoBehaviour
     }
 
     private void HandleOnAir() {
-        if(!isGround) {
+        if (!isGround) {
             knight_ani.SetLayerWeight(1, 1);
         } else {
             knight_ani.SetLayerWeight(1, 0);
             falling = false;
         }
 
-        if(knight_rb.velocity.y < 0) {
+        if (knight_rb.linearVelocity.y < 0) {
             falling = true;
             canJump = false;
         }
     }
 
     void Attack() {
-        
-        if(isGround == true && !this.knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+        if (isGround == true && !this.knight_ani.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
             cutSound.Play();
             isAttack = true;
         }
 
-        if(isGround == false && !this.knight_ani.GetCurrentAnimatorStateInfo(1).IsName("jumpattack")) {
+        if (isGround == false && !this.knight_ani.GetCurrentAnimatorStateInfo(1).IsName("jumpattack")) {
             cutSound.Play();
             jumpAttack = true;
         } else {
@@ -305,12 +300,12 @@ public class Knight : MonoBehaviour
     }
 
     public void Dead() {
-        if(knight_ani){
+        if (knight_ani){
             knight_ani.SetTrigger("Die");
         }
 
-        if(knight_rb){
-            knight_rb.velocity = new Vector2(0f, 0f);
+        if (knight_rb){
+            knight_rb.linearVelocity = new Vector2(0f, 0f);
         }
     }
 
@@ -319,33 +314,31 @@ public class Knight : MonoBehaviour
     }
 
     public void DoKnockBack(Vector3 objectPos) {
-        if(objectPos.x >= transform.position.x && transform.localScale.x < 0) {
+        if (objectPos.x >= transform.position.x && transform.localScale.x < 0) {
             Flip();
-        } else if(objectPos.x <= transform.position.x && transform.localScale.x > 0) {
+        } else if (objectPos.x <= transform.position.x && transform.localScale.x > 0) {
             Flip();
         }
         
-        knight_rb.velocity = new Vector2(-transform.localScale.x * knockBackForce, knockBackForce);
+        knight_rb.linearVelocity = new Vector2(-transform.localScale.x * knockBackForce, knockBackForce);
         StartCoroutine(HurtingTime(HurtingTimeCoolDown));
     }
 
     private IEnumerator Dash(float dir) {
-        if(isDashing == true) {
+        if (isDashing == true) {
             dashSound.Play();
             CreateDust();
             knight_rb.gravityScale = 0;
-            knight_rb.velocity = new Vector2(knight_rb.velocity.x, 0f);
+            knight_rb.linearVelocity = new Vector2(knight_rb.linearVelocity.x, 0f);
             knight_rb.AddForce(new Vector2(dashDistance * dir, 0f), ForceMode2D.Impulse);
         }
         yield return new WaitForSeconds(dashingTime);
         isDashing = false;
     }
 
-    private IEnumerator Deceleration(float dir)
-    {
-        if (isDecelerate == true)
-        {
-            knight_rb.velocity = new Vector2(knight_rb.velocity.x, 0f);
+    private IEnumerator Deceleration(float dir) {
+        if (isDecelerate == true) {
+            knight_rb.linearVelocity = new Vector2(knight_rb.linearVelocity.x, 0f);
             knight_rb.AddForce(new Vector2(decelerateDistance + (dir * Time.deltaTime), 0f), ForceMode2D.Impulse);
         }
         yield return new WaitForSeconds(decelerateTime);
@@ -371,14 +364,14 @@ public class Knight : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
-        if(col.tag == "CheckPoint") {
+        if (col.tag == "CheckPoint") {
             HideIntro.hideText = true;
             levelManager.UpdateCheckPoint(transform.position, Life.lifesCount, Score.gemAmount);
         } 
-        if(col.tag == "DeadZone") {
+        if (col.tag == "DeadZone") {
             isDead = true;
         }
-        if(col.tag == "Finish") {
+        if (col.tag == "Finish") {
             SceneManager.LoadScene(0);
         }
     }

@@ -76,6 +76,6 @@ public class FireWormControl : Monster
         GameObject bullet = Instantiate(fireBall, shootPos.transform.position, Quaternion.identity);
         bullet.GetComponent<MonsterBullet>().damage = bulletDamage;
         bullet.GetComponent<MonsterBullet>().rotateBaseOnVector = true;
-        bullet.GetComponent<Rigidbody2D>().velocity = ThrowProjectileVector(player.transform.position, shootPos.transform.position, timeBulletReachTarget);
+        bullet.GetComponent<Rigidbody2D>().linearVelocity = ThrowProjectileVector(player.transform.position, shootPos.transform.position, timeBulletReachTarget);
     }
 }

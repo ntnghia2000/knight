@@ -157,6 +157,6 @@ public class OldGolemControl : Monster
     {
         GameObject bullet = Instantiate(lavaBullet, shootingPosition.transform.position, Quaternion.identity);
         bullet.GetComponent<MonsterBullet>().rotateBaseOnVector = false;
-        bullet.GetComponent<Rigidbody2D>().velocity = ThrowProjectileVector(player.transform.position, shootingPosition.transform.position, timeBulletReachTarget);
+        bullet.GetComponent<Rigidbody2D>().linearVelocity = ThrowProjectileVector(player.transform.position, shootingPosition.transform.position, timeBulletReachTarget);
     }
 }

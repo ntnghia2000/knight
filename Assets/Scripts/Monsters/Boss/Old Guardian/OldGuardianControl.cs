@@ -636,7 +636,7 @@ public class OldGuardianControl : Monster
     {
         GameObject bullet = Instantiate(boom, shootingPos.transform.position, Quaternion.identity);
         bullet.GetComponent<MonsterBullet>().rotateBaseOnVector = false;
-        bullet.GetComponent<Rigidbody2D>().velocity = ThrowProjectileVector(player.transform.position, shootingPos.transform.position, timeBulletReachTarget);
+        bullet.GetComponent<Rigidbody2D>().linearVelocity = ThrowProjectileVector(player.transform.position, shootingPos.transform.position, timeBulletReachTarget);
     }
 
     private void JumpToTarget(Vector3 target, float offGroundTime)
@@ -649,7 +649,7 @@ public class OldGuardianControl : Monster
             }
         }
 
-        rb.velocity = ThrowProjectileVector(target, transform.position, offGroundTime);
+        rb.linearVelocity = ThrowProjectileVector(target, transform.position, offGroundTime);
     }
 
     private Vector3 OppositeBoundOfPlayer(bool isOpposite)
@@ -681,13 +681,13 @@ public class OldGuardianControl : Monster
 
     private void StandStill()
     {
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     private void MoveHorSmooth(int _moveDirection, float speed)
     {
-        positionMovingTo = new Vector2(speed * Time.fixedDeltaTime * 10f * _moveDirection, rb.velocity.y);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, positionMovingTo, ref currentVelocity, smoothSpeedTime);
+        positionMovingTo = new Vector2(speed * Time.fixedDeltaTime * 10f * _moveDirection, rb.linearVelocity.y);
+        rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, positionMovingTo, ref currentVelocity, smoothSpeedTime);
     }
 
     private void CheckPositionAndMoveHorSmooth(Vector3 target, float _speed)

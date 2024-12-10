@@ -110,7 +110,7 @@ public class Monster : MonoBehaviour
                     isAllowToMove = false;
                     isAllowToUpdate = false;
 
-                    rb.velocity = Vector2.zero;
+                    rb.linearVelocity = Vector2.zero;
                     //rb.isKinematic = true;
 
                     body.SetActive(false);
@@ -137,13 +137,13 @@ public class Monster : MonoBehaviour
     
     protected void _StandStill()
     {
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     protected virtual void _MoveHorSmooth(int _moveDirection, float speed)
     {
-        _positionMovingTo = new Vector2(speed * Time.fixedDeltaTime * 10f * _moveDirection, rb.velocity.y);
-        rb.velocity = Vector3.SmoothDamp(rb.velocity, _positionMovingTo, ref _currentVelocity, _smoothSpeedTime);
+        _positionMovingTo = new Vector2(speed * Time.fixedDeltaTime * 10f * _moveDirection, rb.linearVelocity.y);
+        rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, _positionMovingTo, ref _currentVelocity, _smoothSpeedTime);
     }
 
     protected virtual void _CheckPositionAndMoveHorSmooth(Vector3 target, float _speed)
@@ -176,7 +176,7 @@ public class Monster : MonoBehaviour
     {
         if (!allow)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.isKinematic = true;
         }
         else

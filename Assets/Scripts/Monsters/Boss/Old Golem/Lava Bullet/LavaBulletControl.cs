@@ -23,7 +23,7 @@ public class LavaBulletControl : MonsterBullet
             {
                 collision2D.gameObject.GetComponent<Health>().TakeDamage(damage, transform.position);
                 animator.SetBool("isHitted", true);
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.isKinematic = true;
                 Destroy();
             }
@@ -31,7 +31,7 @@ public class LavaBulletControl : MonsterBullet
         else if (collision2D.gameObject.CompareTag("Ground"))
         {
             animator.SetBool("isHitted", true);
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.isKinematic = true;
             circleCollider2D.enabled = false;
         }
@@ -45,7 +45,7 @@ public class LavaBulletControl : MonsterBullet
             {
                 collider2D.GetComponent<Health>().TakeDamage(damage, transform.position);
                 animator.SetBool("isHitted", true);
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.isKinematic = true;
                 Destroy();
             }
@@ -53,7 +53,7 @@ public class LavaBulletControl : MonsterBullet
         else if (collider2D.CompareTag("Ground"))
         {
             animator.SetBool("isHitted", true);
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.isKinematic = true;
             circleCollider2D.enabled = false;
         }

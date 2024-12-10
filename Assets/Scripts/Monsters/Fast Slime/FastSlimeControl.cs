@@ -82,8 +82,8 @@ public class FastSlimeControl : Monster
                     speed = normalSpeed;
                 }
 
-                movingToPosition = new Vector2(speed * Time.fixedDeltaTime * 10f * moveDirection, rb.velocity.y);
-                rb.velocity = Vector3.SmoothDamp(rb.velocity, movingToPosition, ref currentVelocity, smoothSpeedTime);
+                movingToPosition = new Vector2(speed * Time.fixedDeltaTime * 10f * moveDirection, rb.linearVelocity.y);
+                rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, movingToPosition, ref currentVelocity, smoothSpeedTime);
             }
         }
     }
