@@ -29,7 +29,9 @@ public class Health : MonoBehaviour
         ani = GetComponent<Animator>();
         knight = GetComponent<Knight>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        currentHealthBar.fillAmount = currentHealth / 10;
+        if (currentHealthBar != null) {
+            currentHealthBar.fillAmount = currentHealth / 10;
+        }
     }
 
     public void TakeDamage(float damage, Vector3 objectPos) {

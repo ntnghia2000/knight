@@ -32,12 +32,19 @@ public class playerAttack : MonoBehaviour
         shootSound.Play();
         ani.SetTrigger("cast");
         coolDownTimer = 0;
+        CastingFireBall();
+    }
 
-        fireballs[FindFireball()].transform.position = firePoint.position;
-        if(knight.GetIsWall() == true) {
-            fireballs[FindFireball()].GetComponent<ProjectTile>().SetDirection(Mathf.Sign(-transform.localScale.x));
-        } else {
-            fireballs[FindFireball()].GetComponent<ProjectTile>().SetDirection(Mathf.Sign(transform.localScale.x));
+    private void CastingFireBall() {
+        GameObject fireBall = fireballs[FindFireball()];
+        if (fireBall != null) {
+            fireBall.transform.position = firePoint.position;
+            ProjectTile fireBallProjectTile = fireBall.GetComponent<ProjectTile>();
+            if (knight.GetIsWall() == true) {
+                fireBallProjectTile.SetDirection(Mathf.Sign(-transform.localScale.x));
+            } else {
+                fireBallProjectTile.SetDirection(Mathf.Sign(transform.localScale.x));
+            }
         }
     }
 
