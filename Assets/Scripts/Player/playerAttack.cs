@@ -1,16 +1,21 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Pool;
 
 public class playerAttack : MonoBehaviour
 {
     [Header("Attributed")]
     [SerializeField] private float fireCoolDown;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject[] fireballs;
+    [SerializeField] private ProjectTile projectTilePrefab;
+    [SerializeField] private bool collectionCheck;
+    [SerializeField] private int maxProjectTile;
     [Header("Sound")]
     [SerializeField] private AudioSource shootSound;
+
+    private IObjectPool<ProjectTile> objectPool;
     private Animator ani;
     private Knight knight;
     private float coolDownTimer = Mathf.Infinity;
@@ -18,42 +23,50 @@ public class playerAttack : MonoBehaviour
     private void Awake() {
         ani = GetComponent<Animator>();
         knight = GetComponent<Knight>();
+        objectPool = new ObjectPool<ProjectTile>(CreateProjectTile, OnGetFromPool, OnReleaseToPool, OnDestroyPoolObject, collectionCheck, 10, maxProjectTile);
+    }
+
+    private ProjectTile CreateProjectTile() {
+        ProjectTile projectTileInstance = Instantiate(projectTilePrefab);
+        projectTileInstance.ObjectPool = objectPool;
+        return projectTileInstance;
+    }
+
+    private void OnGetFromPool(ProjectTile projectTile) {
+        projectTile.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseToPool(ProjectTile projectTile) {
+        projectTile.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyPoolObject(ProjectTile projectTile) {
+        Destroy(projectTile.gameObject);
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.C) && coolDownTimer > fireCoolDown && knight.canShoot() && SceneManager.GetActiveScene().buildIndex > 2) {
-            Shoot();
+        if(Input.GetKeyDown(KeyCode.C) && coolDownTimer > fireCoolDown &&
+            knight.canShoot() && objectPool != null) {
+            CastingFireBall();
         }
 
         coolDownTimer += Time.deltaTime;
     }
 
-    private void Shoot() {
-        shootSound.Play();
+    private void CastingFireBall() {
         ani.SetTrigger("cast");
         coolDownTimer = 0;
-        CastingFireBall();
-    }
 
-    private void CastingFireBall() {
-        GameObject fireBall = fireballs[FindFireball()];
+        ProjectTile fireBall = objectPool.Get();
+
         if (fireBall != null) {
             fireBall.transform.position = firePoint.position;
-            ProjectTile fireBallProjectTile = fireBall.GetComponent<ProjectTile>();
             if (knight.GetIsWall() == true) {
-                fireBallProjectTile.SetDirection(Mathf.Sign(-transform.localScale.x));
+                fireBall.SetDirection(Mathf.Sign(-transform.localScale.x));
             } else {
-                fireBallProjectTile.SetDirection(Mathf.Sign(transform.localScale.x));
+                fireBall.SetDirection(Mathf.Sign(transform.localScale.x));
             }
+            fireBall.Deactivate();
         }
-    }
-
-    private int FindFireball() {
-        for (int i = 0; i < fireballs.Length; i++) {
-            if(!fireballs[i].activeInHierarchy) {
-                return i;
-            }
-        }
-        return 0;
     }
 }

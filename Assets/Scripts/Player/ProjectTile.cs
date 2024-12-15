@@ -1,17 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class ProjectTile : MonoBehaviour
 {   
     [SerializeField] private float speed;
     [SerializeField] private int damage;
+
     private bool hit;
     private bool isWall;
     private float direction;
-    private float lifeTime;
+    private float lifeTime = 3f;
     private BoxCollider2D collider;
     private Animator ani;
+
+    private IObjectPool<ProjectTile> objectPool;
+    public IObjectPool<ProjectTile> ObjectPool { set => objectPool = value; }
 
     private void Awake() {
         ani = GetComponent<Animator>();
@@ -19,24 +24,20 @@ public class ProjectTile : MonoBehaviour
     }
 
     private void Update() {
-
-        if(hit) {
+        if (hit) {
             return;
         }
 
         float moveSpeed = speed * Time.deltaTime * direction;
         transform.Translate(moveSpeed, 0, 0);
-
-        lifeTime += Time.deltaTime;
-        if(lifeTime > 3) gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D col) {
-        if(col.tag == "Monster" || col.tag == "Ground") {
+        if (col.tag == "Monster" || col.tag == "Ground") {
             hit = true;
             collider.enabled = false;
             ani.SetTrigger("explote");
-            if(col.tag == "Monster") {
+            if (col.tag == "Monster") {
                 col.GetComponent<Monster>().TakeDamage(damage);
             }
         }
@@ -50,14 +51,19 @@ public class ProjectTile : MonoBehaviour
         collider.enabled = true;
 
         float localScaleX = transform.localScale.x;
-        if(Mathf.Sign(localScaleX) != dir) {
+        if (Mathf.Sign(localScaleX) != dir) {
             localScaleX = -localScaleX;
         }
 
         transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
 
-    private void Deactivate() {
-        gameObject.SetActive(false);
+    public void Deactivate() {
+        StartCoroutine(DeactivateRoutine(lifeTime));
+    }
+
+    IEnumerator DeactivateRoutine(float delay) {
+        yield return new WaitForSeconds(delay);
+        objectPool.Release(this);
     }
 }

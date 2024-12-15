@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Knight : MonoBehaviour
+public class Knight : Subject
 {
     [Header("Collision")]
     [SerializeField] private LayerMask whatIsGround;
@@ -64,6 +64,7 @@ public class Knight : MonoBehaviour
             levelManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
             transform.position = levelManager.respawnPoint;
         }
+        NotifyObserver();
     }
 
     private void FixedUpdate() {
