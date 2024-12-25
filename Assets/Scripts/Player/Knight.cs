@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum PlayerState
+{
+    Idle,
+    Walk,
+    Jump,
+    Dash,
+    Attack
+}
+
 public class Knight : Subject
 {
     [Header("Collision")]
@@ -34,7 +43,7 @@ public class Knight : Subject
     private bool backTouching;
     private bool isAttack;
     private bool isDead;
-    private bool facingRight = true;
+    private bool isFacingRight = true;
     private bool canJump;
     private bool canMove;
     private bool falling;
@@ -49,7 +58,8 @@ public class Knight : Subject
 
     private float horizontalInput;
     private float gravity;
-    
+
+    private PlayerState _state;
     private LevelManager levelManager;
 
     private void Awake() {
@@ -76,30 +86,6 @@ public class Knight : Subject
 
         if (isDashing == false && isDead == false && isHurting == false && horizontalInput != 0) {
             MoveHandle();
-        }
-    }
-
-    void MoveHandle() {
-        
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            if (!_knightAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-                _knightRigidBody.linearVelocity = new Vector2(moveSpeed * horizontalInput, _knightRigidBody.linearVelocity.y);
-            }
-            if (facingRight) {
-                Flip();
-            }
-            
-        } else if (Input.GetKey(KeyCode.RightArrow)) {
-            if (!_knightAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-                _knightRigidBody.linearVelocity = new Vector2(moveSpeed * horizontalInput, _knightRigidBody.linearVelocity.y);
-            }
-            if (!facingRight) {
-                Flip();
-            }
-        } else {
-            if (_knightRigidBody) {
-                _knightRigidBody.linearVelocity = new Vector2(0f, _knightRigidBody.linearVelocity.y);
-            }
         }
     }
 
@@ -141,37 +127,37 @@ public class Knight : Subject
     }
 
     private void KeyHandle() {
-        if (isDead == false) {
-            if (Input.GetKeyDown(KeyCode.Space) && backTouching == false) {
-                Jump();
-                DoubleJump();
-            }
-            if (Input.GetKeyDown(KeyCode.X)) {
-                if (stopAttack == false) {
-                    Attack();
-                    StartCoroutine(StopAttack());
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.Z)) {
-                bool canDash = isGround == true && isDashing == false && canMove == true;
-                if (canDash) {
-                    isDashing = true;
-                    if (facingRight == true) {
-                        StartCoroutine(Dash(1));
-                    } else {
-                        StartCoroutine(Dash(-1));
-                    }
-                }
-            }
+        if (isDead) return;
 
-            if (Input.GetKeyUp(KeyCode.LeftArrow)) {
-                isDecelerate = true;
-                StartCoroutine(Deceleration(-1f));
+        if (Input.GetKeyDown(KeyCode.Space) && backTouching == false) {
+            Jump();
+            DoubleJump();
+        }
+        if (Input.GetKeyDown(KeyCode.X)) {
+            if (stopAttack == false) {
+                Attack();
+                StartCoroutine(StopAttack());
             }
-            if (Input.GetKeyUp(KeyCode.RightArrow)) {
-                isDecelerate = true;
-                StartCoroutine(Deceleration(1f));
+        }
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            bool canDash = isGround == true && isDashing == false && canMove == true;
+            if (canDash) {
+                isDashing = true;
+                if (isFacingRight == true) {
+                    StartCoroutine(Dash(1));
+                } else {
+                    StartCoroutine(Dash(-1));
+                }
             }
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftArrow)) {
+            isDecelerate = true;
+            StartCoroutine(Deceleration(-1f));
+        }
+        if (Input.GetKeyUp(KeyCode.RightArrow)) {
+            isDecelerate = true;
+            StartCoroutine(Deceleration(1f));
         }
     }
 
@@ -187,10 +173,33 @@ public class Knight : Subject
         return isHurting;
     }
 
+    void MoveHandle() {
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            if (!_knightAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+                _knightRigidBody.linearVelocity = new Vector2(moveSpeed * horizontalInput, _knightRigidBody.linearVelocity.y);
+            }
+            if (isFacingRight) {
+                Flip();
+            }
+            
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
+            if (!_knightAnimator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
+                _knightRigidBody.linearVelocity = new Vector2(moveSpeed * horizontalInput, _knightRigidBody.linearVelocity.y);
+            }
+            if (!isFacingRight) {
+                Flip();
+            }
+        } else {
+            if (_knightRigidBody) {
+                _knightRigidBody.linearVelocity = new Vector2(0f, _knightRigidBody.linearVelocity.y);
+            }
+        }
+    }
+
     private void Flip() {
         if (backTouching == false) {
             CreateDust();
-            facingRight = !facingRight;
+            isFacingRight = !isFacingRight;
             Vector3 scaler = transform.localScale;
             scaler.x *= -1;
             transform.localScale = scaler;

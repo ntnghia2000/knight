@@ -7,11 +7,11 @@ public class ProjectTile : MonoBehaviour
 {   
     [SerializeField] private float speed;
     [SerializeField] private int damage;
+    [SerializeField] private int lifeTime;
 
     private bool hit;
     private bool isWall;
     private float direction;
-    private float lifeTime = 3f;
     private BoxCollider2D collider;
     private Animator ani;
 

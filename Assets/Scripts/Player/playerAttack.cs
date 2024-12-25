@@ -45,7 +45,7 @@ public class playerAttack : MonoBehaviour
     }
 
     private void Update() {
-        if(Input.GetKeyDown(KeyCode.C) && coolDownTimer > fireCoolDown &&
+        if (Input.GetKeyDown(KeyCode.C) && coolDownTimer > fireCoolDown &&
             knight.canShoot() && objectPool != null) {
             CastingFireBall();
         }
