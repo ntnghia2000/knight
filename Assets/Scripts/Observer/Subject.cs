@@ -19,7 +19,7 @@ public abstract class Subject : MonoBehaviour
         });
     }
 
-    public void TriggerObserverActions(PlayerActionEnum action) {
+    public void TriggerObserverActions(PlayerActions action) {
         _observers.ForEach((observer) => {
             observer.TriggerAction(action);
         });
