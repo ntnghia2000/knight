@@ -1,16 +1,9 @@
 using UnityEngine;
 
-public class DungeonGenerationData : MonoBehaviour
+[CreateAssetMenu(fileName = "DungeonGenerationData.asset", menuName = "DungeonGenerationData/DungeonData")]
+public class DungeonGenerationData : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int crawlerAmount;
+    public int interationMin;
+    public int interationMax;
 }

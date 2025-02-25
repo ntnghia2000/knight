@@ -34,19 +34,19 @@ public class RoomController : MonoBehaviour
         totalColumn = mapWidth / roomWidth;
         totalRow = mapHeight / roomHeight;
 
-        if (maxRoomAmount > 0) {
-            for (int i = 0; i < maxRoomAmount; i++) {
-                string roomName = "Room" + " " + currentCol + " " + currentRow;
-                loadRoom(roomName, currentCol, currentRow);
+        //if (maxRoomAmount > 0) {
+        //    for (int i = 0; i < maxRoomAmount; i++) {
+        //        string roomName = "Room" + " " + currentCol + " " + currentRow;
+        //        loadRoom(roomName, currentCol, currentRow);
 
-                currentCol++;
-                if (currentCol >= totalColumn) {
-                    currentCol = 0;
-                    currentRow++;
-                }
-            }
-        }
-        CameraControl.instance.CurrentRoom = loadedRooms[0];
+        //        currentCol++;
+        //        if (currentCol >= totalColumn) {
+        //            currentCol = 0;
+        //            currentRow++;
+        //        }
+        //    }
+        //}
+        //CameraControl.instance.CurrentRoom = loadedRooms[0];
     }
 
     public void loadRoom(string name, int col, int row)
