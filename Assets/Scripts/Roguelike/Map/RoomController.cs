@@ -18,35 +18,16 @@ public class RoomController : MonoBehaviour
     List<Room> loadedRooms = new List<Room>();
     private string currentRoomName;
     private bool isLoadingRoom = false;
-    private int totalColumn = 0;
-    private int totalRow = 0;
-    private int currentCol = 0;
-    private int currentRow = 0;
     private Room currentRoom;
+
+    public Room CurrentRoom
+    {
+        get { return currentRoom; }
+    }
 
     private void Awake()
     {
         instance = this;
-    }
-
-    private void Start()
-    {
-        totalColumn = mapWidth / roomWidth;
-        totalRow = mapHeight / roomHeight;
-
-        //if (maxRoomAmount > 0) {
-        //    for (int i = 0; i < maxRoomAmount; i++) {
-        //        string roomName = "Room" + " " + currentCol + " " + currentRow;
-        //        loadRoom(roomName, currentCol, currentRow);
-
-        //        currentCol++;
-        //        if (currentCol >= totalColumn) {
-        //            currentCol = 0;
-        //            currentRow++;
-        //        }
-        //    }
-        //}
-        //CameraControl.instance.CurrentRoom = loadedRooms[0];
     }
 
     public void loadRoom(string name, int col, int row)
@@ -54,29 +35,19 @@ public class RoomController : MonoBehaviour
         if (doesRoomExisted(col, row)) {
             return;
         }
+        string roomName = name + " " + col + " " + row;
         GameObject newRoom = Instantiate(roomPrefab);
         Room roomComp = newRoom.GetComponent<Room>();
-        roomComp.initRoom(name, col, row);
+        roomComp.initRoom(roomName, col, row);
         registerRoom(roomComp);
         roomDatas.Enqueue(roomComp.RoomData);
-    }
-
-    IEnumerator waitForLoadingRoom(RoomData data)
-    {
-        currentRoomName = data.Name;
-        AsyncOperation loadRoom = SceneManager.LoadSceneAsync(currentRoomName, LoadSceneMode.Additive);
-        while(loadRoom.isDone == false) {
-            yield return null;
-        }
     }
 
     public void registerRoom(Room room)
     {
         RoomData currentRoomData = room.RoomData;
-        int offsetX = currentRoomData.Col > 0 ? 6 : 0;
-        int offsetY = currentRoomData.Row > 0 ? 2 : 0;
-        int xPos = currentRoomData.Col * roomWidth + offsetX;
-        int yPos = currentRoomData.Row * roomHeight + offsetY;
+        int xPos = currentRoomData.Col * roomWidth;
+        int yPos = currentRoomData.Row * roomHeight;
         room.transform.position = new Vector3(xPos, yPos, 0);
         room.name = currentRoomData.Name;
         room.transform.parent = transform;
@@ -84,9 +55,22 @@ public class RoomController : MonoBehaviour
         loadedRooms.Add(room);
     }
 
+    public void setupDoors()
+    {
+        foreach (Room room in loadedRooms) {
+            room.setDoorActivations();
+        }
+    }
+
+    public Room getRoomByColRow(int col, int row)
+    {
+        Room foundRoom = loadedRooms.Find(room => room.RoomData.Col == col && room.RoomData.Row == row);
+        return foundRoom;
+    }
+
     public bool doesRoomExisted(int col, int row)
     {
-        return loadedRooms.Find(room => room.RoomData.Col == col && room.RoomData.Row == row) != null;
+        return getRoomByColRow(col, row) != null;
     }
 
     public void onPlayerEnterRoom(Room room)

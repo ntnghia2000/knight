@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public abstract class Unit : MonoBehaviour, IObserver
 {
@@ -53,7 +54,7 @@ public abstract class Unit : MonoBehaviour, IObserver
         Debug.Log("Initialize unit success");
     }
 
-    public void TriggerAction(PlayerActions action)
+    public void TriggerAction(PlayerActions action, Action callback)
     {
         if (action == PlayerActions.Walk) {
             FindPathRequestManager.RequestPath(transform.position, target.transform.position, onPathFound);

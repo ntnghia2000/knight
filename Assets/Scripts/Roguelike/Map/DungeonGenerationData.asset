@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DungeonGenerationData
   m_EditorClassIdentifier: 
   crawlerAmount: 2
-  interationMin: 1
-  interationMax: 5
+  interationMin: 5
+  interationMax: 7

@@ -1,13 +1,16 @@
 using UnityEngine;
+using System;
 using static Unity.Cinemachine.CinemachineSplineRoll;
 
 public class CameraControl : MonoBehaviour, IObserver
 {
+    [SerializeField] protected Subject player;
     [SerializeField] private float changeRoomSpeed;
 
     public static CameraControl instance;
     private Room currentRoom;
     private bool isChangingRoom = false;
+    private Action changeRoomCallback = null;
 
     public Room CurrentRoom
     {
@@ -24,6 +27,11 @@ public class CameraControl : MonoBehaviour, IObserver
     private void Awake()
     {
         instance = this;
+    }
+
+    private void OnEnable()
+    {
+        player.AddObserver(this);
     }
 
     private void Update()
@@ -56,13 +64,14 @@ public class CameraControl : MonoBehaviour, IObserver
         Debug.Log("Initialize unit success");
     }
 
-    public void TriggerAction(PlayerActions action)
+    public void TriggerAction(PlayerActions action, Action callback)
     {
         if (action == PlayerActions.TouchingDoor) {
-            isChangingRoom = true;
         }
-        if (action == PlayerActions.TouchingWall) {
-            isChangingRoom = true;
-        }
+    }
+
+    private void OnDisable()
+    {
+        player.RemoveObserver(this);
     }
 }

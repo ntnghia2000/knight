@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class Subject : MonoBehaviour
 {
@@ -19,9 +20,9 @@ public abstract class Subject : MonoBehaviour
         });
     }
 
-    public void TriggerObserverActions(PlayerActions action) {
+    public void TriggerObserverActions(PlayerActions action, Action callback = null) {
         _observers.ForEach((observer) => {
-            observer.TriggerAction(action);
+            observer.TriggerAction(action, callback);
         });
     }
 }

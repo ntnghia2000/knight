@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonCrawler : MonoBehaviour
+public class DungeonCrawler
 {
     private Vector2Int crawlerPosition;
 

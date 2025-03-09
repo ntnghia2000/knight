@@ -5,22 +5,39 @@ public class Door : MonoBehaviour
     [SerializeField] private Direction direction;
 
     private int playerLayer = 10;
-    private Room currentRoom;
+    private Room nextRoomEnter;
+    private BoxCollider2D doorCollider;
 
     public Direction Direction
     {
         get { return direction; }
     }
 
-    public void registerCurrrentRoom(Room room)
+    private void Start()
     {
-        currentRoom = room;
+        doorCollider = GetComponent<BoxCollider2D>();
+        gameObject.SetActive(false);
+    }
+
+    public void enableMovement()
+    {
+        doorCollider.isTrigger = false;
+    }
+
+    public void disableMovement()
+    {
+        doorCollider.isTrigger = true;
+    }
+
+    public void registerNextRoomEnter(Room room)
+    {
+        nextRoomEnter = room;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == playerLayer) {
-            //RoomController.instance.onPlayerEnterRoom(this);
+            RoomController.instance.onPlayerEnterRoom(nextRoomEnter);
         }
     }
 }

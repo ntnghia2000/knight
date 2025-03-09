@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class PlayerEventHandler : MonoBehaviour, IObserver
 {
@@ -17,7 +18,7 @@ public class PlayerEventHandler : MonoBehaviour, IObserver
         Debug.Log("Say Hi To Observer");
     }
 
-    public void TriggerAction(PlayerActions action) {
+    public void TriggerAction(PlayerActions action, Action callback) {
         //
     }
 }

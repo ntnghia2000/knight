@@ -58,9 +58,6 @@ public class Room : MonoBehaviour
     {
         Vector2 roomWorldSize = new Vector2(roomWidth, roomHeight);
         roomData = new RoomData(name, col, row, roomWorldSize);
-        foreach(Door door in doors) {
-            door.registerCurrrentRoom(this);
-        }
     }
 
     public RoomData RoomData
@@ -80,16 +77,44 @@ public class Room : MonoBehaviour
         return transform.position;
     }
 
-    private void OnDrawGizmos()
+    public void setDoorActivations()
     {
-        Gizmos.color = new Color(1, 0, 0, 0.5f);
-        Gizmos.DrawWireCube(transform.position, new Vector3(roomWidth, roomHeight, 1));
+        if (RoomController.instance.doesRoomExisted(roomData.Col + 1, roomData.Row)) {
+            Room rightRoom = RoomController.instance.getRoomByColRow(roomData.Col + 1, roomData.Row);
+            doors[(int)Direction.Right].registerNextRoomEnter(rightRoom);
+            doors[(int)Direction.Right].gameObject.SetActive(true);
+            doors[(int)Direction.Right].enableMovement();
+        }
+        if (RoomController.instance.doesRoomExisted(roomData.Col - 1, roomData.Row)) {
+            Room leftRoom = RoomController.instance.getRoomByColRow(roomData.Col - 1, roomData.Row);
+            doors[(int)Direction.Left].registerNextRoomEnter(leftRoom);
+            doors[(int)Direction.Left].gameObject.SetActive(true);
+            doors[(int)Direction.Left].enableMovement();
+        }
+        if (RoomController.instance.doesRoomExisted(roomData.Col, roomData.Row + 1)) {
+            Room topRoom = RoomController.instance.getRoomByColRow(roomData.Col, roomData.Row + 1);
+            doors[(int)Direction.Top].registerNextRoomEnter(topRoom);
+            doors[(int)Direction.Top].gameObject.SetActive(true);
+            doors[(int)Direction.Top].enableMovement();
+        }
+        if (RoomController.instance.doesRoomExisted(roomData.Col, roomData.Row - 1)) {
+            Room bottomRoom = RoomController.instance.getRoomByColRow(roomData.Col, roomData.Row - 1);
+            doors[(int)Direction.Bottom].registerNextRoomEnter(bottomRoom);
+            doors[(int)Direction.Bottom].gameObject.SetActive(true);
+            doors[(int)Direction.Bottom].enableMovement();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == playerLayer) {
-            RoomController.instance.onPlayerEnterRoom(this);
+            //RoomController.instance.onPlayerEnterRoom(this);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.5f);
+        Gizmos.DrawWireCube(transform.position, new Vector3(roomWidth, roomHeight, 1));
     }
 }
